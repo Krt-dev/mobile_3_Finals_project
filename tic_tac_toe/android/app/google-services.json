@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "267999091045",
+    "project_id": "mobile-finals-2024",
+    "storage_bucket": "mobile-finals-2024.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267999091045:android:5b23fbbde5e7d4133f698c",
+        "android_client_info": {
+          "package_name": "com.example.tic_tac_toe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5doGPdIMNZa3j5_ZbQZDzLTe2zd2iLk8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

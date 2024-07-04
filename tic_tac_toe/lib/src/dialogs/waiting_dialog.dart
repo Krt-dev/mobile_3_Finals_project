@@ -19,9 +19,7 @@ class WaitingDialog extends StatelessWidget {
         Navigator.of(context, rootNavigator: true).pop();
       }
       return result;
-    } catch (e, st) {
-      print(e);
-      print(st);
+    } catch (e) {
       if (context.mounted) {
         Navigator.of(context, rootNavigator: true).pop();
         Info.showSnackbarMessage(context, actionLabel: "Copy",

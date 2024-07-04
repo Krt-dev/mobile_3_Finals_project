@@ -8,14 +8,7 @@ import "package:tic_tac_toe/src/screens/auth/login.screen.dart";
 import "package:tic_tac_toe/src/screens/auth/registration.screen.dart";
 import "package:tic_tac_toe/src/screens/home/home.screen.dart";
 import "package:tic_tac_toe/src/screens/home/wrapper.dart";
-import "package:tic_tac_toe/src/screens/key_example.dart";
-import "package:tic_tac_toe/src/screens/no_key_example.dart";
-import "package:tic_tac_toe/src/screens/simple_counter.screen.dart";
-import "package:tic_tac_toe/src/screens/simple_counter_with_initial_value.screen.dart";
-import "package:tic_tac_toe/src/screens/stfulP_stfulP.dart";
-import "package:tic_tac_toe/src/screens/stfulP_stlssC.dart";
 import "../controllers/auth_controller.dart";
-import "../screens/index.screen.dart";
 
 /// https://pub.dev/packages/go_router
 
@@ -90,75 +83,12 @@ class GlobalRouter {
                     builder: (context, _) {
                       return const HomeScreen();
                     }),
-                GoRoute(
-                    parentNavigatorKey: _shellNavigatorKey,
-                    path: "/index",
-                    name: "Wrapped Index",
-                    builder: (context, _) {
-                      return const IndexScreen();
-                    }),
               ],
               builder: (context, state, child) {
                 return HomeWrapper(
                   child: child,
                 );
               }),
-          GoRoute(
-              parentNavigatorKey: _rootNavigatorKey,
-              path: IndexScreen.route,
-
-              /// /
-              name: IndexScreen.name,
-              builder: (context, _) {
-                return const IndexScreen();
-              },
-              routes: [
-                GoRoute(
-                    parentNavigatorKey: _rootNavigatorKey,
-                    path: SimpleCounterScreen.route,
-
-                    /// / + simple-counter
-                    name: SimpleCounterScreen.name,
-                    builder: (context, _) {
-                      return const SimpleCounterScreen();
-                    }),
-                GoRoute(
-                    parentNavigatorKey: _rootNavigatorKey,
-                    path: SimpleCounterScreenWithInitialValue.route,
-                    name: SimpleCounterScreenWithInitialValue.name,
-                    builder: (context, _) {
-                      return const SimpleCounterScreenWithInitialValue(
-                          initialValue: 10);
-                    }),
-                GoRoute(
-                    parentNavigatorKey: _rootNavigatorKey,
-                    path: StatefulParent.route,
-                    name: StatefulParent.name,
-                    builder: (context, _) {
-                      return const StatefulParent();
-                    }),
-                GoRoute(
-                    parentNavigatorKey: _rootNavigatorKey,
-                    path: StatefulParentAndChild.route,
-                    name: StatefulParentAndChild.name,
-                    builder: (context, _) {
-                      return const StatefulParentAndChild();
-                    }),
-                GoRoute(
-                    parentNavigatorKey: _rootNavigatorKey,
-                    path: KeyExample.route,
-                    name: KeyExample.name,
-                    builder: (context, _) {
-                      return const KeyExample();
-                    }),
-                GoRoute(
-                    parentNavigatorKey: _rootNavigatorKey,
-                    path: NoKeyExample.route,
-                    name: NoKeyExample.name,
-                    builder: (context, _) {
-                      return const NoKeyExample();
-                    }),
-              ]),
         ]);
   }
 }

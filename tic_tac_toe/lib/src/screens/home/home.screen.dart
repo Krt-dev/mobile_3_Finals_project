@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:state_change_demo/src/controllers/auth_controller.dart';
-import 'package:state_change_demo/src/dialogs/waiting_dialog.dart';
+import 'package:tic_tac_toe/src/controllers/auth_controller.dart';
+import 'package:tic_tac_toe/src/dialogs/waiting_dialog.dart';
+
 
 class HomeScreen extends StatelessWidget {
   static const String route = '/home';

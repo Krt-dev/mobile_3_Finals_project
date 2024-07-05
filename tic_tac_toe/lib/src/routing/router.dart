@@ -6,6 +6,7 @@ import "package:go_router/go_router.dart";
 import "package:tic_tac_toe/src/enum/enum.dart";
 import "package:tic_tac_toe/src/screens/auth/login.screen.dart";
 import "package:tic_tac_toe/src/screens/auth/registration.screen.dart";
+import "package:tic_tac_toe/src/screens/game/game_screen.dart";
 import "package:tic_tac_toe/src/screens/home/home.screen.dart";
 import "package:tic_tac_toe/src/screens/home/wrapper.dart";
 import "../controllers/auth_controller.dart";
@@ -82,6 +83,13 @@ class GlobalRouter {
                     name: HomeScreen.name,
                     builder: (context, _) {
                       return const HomeScreen();
+                    }),
+                GoRoute(
+                    parentNavigatorKey: _shellNavigatorKey,
+                    path: GameScreen.route,
+                    name: GameScreen.name,
+                    builder: (context, _) {
+                      return const GameScreen();
                     }),
               ],
               builder: (context, state, child) {

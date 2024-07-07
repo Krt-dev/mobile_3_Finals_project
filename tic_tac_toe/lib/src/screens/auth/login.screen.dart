@@ -194,16 +194,5 @@ class _LoginScreenState extends State<LoginScreen> {
       errorBorder: _baseBorder.copyWith(
         borderSide: const BorderSide(color: Colors.deepOrangeAccent, width: 1),
       )
-      // errorStyle:
-      // AppTypography.body.b5.copyWith(color: AppColors.highlight.shade900),
-      // focusedErrorBorder: _baseBorder.copyWith(
-      // borderSide: BorderSide(color: AppColors.highlight.shade900, width: 1),
-      // ),
-      // labelStyle: AppTypography.subheading.s1
-      //     .copyWith(color: AppColors.secondary.shade2),
-      // floatingLabelStyle: AppTypography.heading.h5
-      //     .copyWith(color: AppColors.primary.shade400, fontSize: 18),
-      // hintStyle: AppTypography.subheading.s1
-      //     .copyWith(color: AppColors.secondary.shade2),
       );
 }

@@ -101,6 +101,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                   errorText: "Please select a valid email"),
                             ]).call,
                           ),
+                          focusNode: usernameFn,
+                          controller: username,
+                          onEditingComplete: () {
+                            passwordFn.requestFocus();
+                          },
+                          validator: MultiValidator([
+                            RequiredValidator(
+                                errorText: 'Please fill out the username'),
+                            MaxLengthValidator(32,
+                                errorText:
+                                    "Username cannot exceed 32 characters"),
+                            EmailValidator(
+                                errorText: "Please select a valid email"),
+                          ]).call,
                         ),
                         const SizedBox(
                           height: 10,

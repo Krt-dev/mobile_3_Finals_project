@@ -7,6 +7,7 @@ import "package:tic_tac_toe/src/enum/enum.dart";
 import "package:tic_tac_toe/src/screens/auth/login.screen.dart";
 import "package:tic_tac_toe/src/screens/auth/registration.screen.dart";
 import "package:tic_tac_toe/src/screens/game/game_screen.dart";
+import "package:tic_tac_toe/src/screens/game/lobby_screen.dart";
 import "package:tic_tac_toe/src/screens/home/home.screen.dart";
 import "package:tic_tac_toe/src/screens/home/wrapper.dart";
 import "../controllers/auth_controller.dart";
@@ -90,6 +91,13 @@ class GlobalRouter {
                     name: GameScreen.name,
                     builder: (context, _) {
                       return const GameScreen();
+                    }),
+                GoRoute(
+                    parentNavigatorKey: _shellNavigatorKey,
+                    path: LobbyScreen.route,
+                    name: LobbyScreen.name,
+                    builder: (context, _) {
+                      return const LobbyScreen();
                     }),
               ],
               builder: (context, state, child) {

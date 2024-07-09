@@ -16,16 +16,20 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Gaming Screen PlaceHolder"),
-        backgroundColor: Colors.blue,
-      ),
-      body: const Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Center(child: Text("This is the gaming screen")),
-        ],
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/tictacBG.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Center(child: Text("This is the gaming screen")),
+          ],
+        ),
       ),
     );
   }

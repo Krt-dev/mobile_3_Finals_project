@@ -23,13 +23,10 @@ class _HomeWrapperState extends State<HomeWrapper> {
     return Scaffold(
       body: widget.child ?? const Placeholder(),
       bottomNavigationBar: BottomNavigationBar(
-        // showSelectedLabels: false,
-        // showUnselectedLabels: false,
         currentIndex: index,
         onTap: (i) {
           setState(() {
             index = i;
-            // GoRouter.of(context).go(routes[i]);
 
             GlobalRouter.I.router.go(routes[i]);
           });

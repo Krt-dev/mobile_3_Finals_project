@@ -61,123 +61,130 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(vertical: 80),
-                        child: SizedBox(
-                          width: 500,
-                          height: 80,
-                          child: Image.asset('assets/images/TIC-TAC-TOE.png'),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(top: 60),
-                        child: Flexible(
-                          child: TextFormField(
-                            decoration: decoration.copyWith(
-                                labelText: "Username",
-                                prefixIcon: const Icon(Icons.person),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      40.0), // Adds rounded corners
-                                  borderSide: const BorderSide(
-                                    width: 15.0, // Sets border width
-                                  ),
-                                )),
-                            focusNode: usernameFn,
-                            controller: username,
-                            onEditingComplete: () {
-                              passwordFn.requestFocus();
-                            },
-                            validator: MultiValidator([
-                              RequiredValidator(
-                                  errorText: 'Please fill out the username'),
-                              MaxLengthValidator(32,
-                                  errorText:
-                                      "Username cannot exceed 32 characters"),
-                              EmailValidator(
-                                  errorText: "Please select a valid email"),
-                            ]).call,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(vertical: 80),
+                          child: SizedBox(
+                            width: 500,
+                            height: 80,
+                            child: Image.asset('assets/images/TIC-TAC-TOE.png'),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Flexible(
-                          child: TextFormField(
-                            keyboardType: TextInputType.visiblePassword,
-                            obscureText: obfuscate,
-                            decoration: decoration.copyWith(
-                                labelText: "Password",
-                                prefixIcon: const Icon(Icons.password),
-                                suffixIcon: IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        obfuscate = !obfuscate;
-                                      });
-                                    },
-                                    icon: Icon(obfuscate
-                                        ? Icons.remove_red_eye_rounded
-                                        : CupertinoIcons.eye_slash))),
-                            focusNode: passwordFn,
-                            controller: password,
-                            onEditingComplete: () {
-                              passwordFn.unfocus();
+                        Container(
+                          padding: const EdgeInsets.only(top: 60),
+                          child: Flexible(
+                            child: TextFormField(
+                              decoration: decoration.copyWith(
+                                  labelText: "Username",
+                                  prefixIcon: const Icon(Icons.person),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        40.0), // Adds rounded corners
+                                    borderSide: const BorderSide(
+                                      width: 15.0, // Sets border width
+                                    ),
+                                  )),
+                              focusNode: usernameFn,
+                              controller: username,
+                              onEditingComplete: () {
+                                passwordFn.requestFocus();
+                              },
+                              validator: MultiValidator([
+                                RequiredValidator(
+                                    errorText: 'Please fill out the username'),
+                                MaxLengthValidator(32,
+                                    errorText:
+                                        "Username cannot exceed 32 characters"),
+                                EmailValidator(
+                                    errorText: "Please select a valid email"),
+                              ]).call,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 200),
+                          child: Container(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Flexible(
+                              child: TextFormField(
+                                keyboardType: TextInputType.visiblePassword,
+                                obscureText: obfuscate,
+                                decoration: decoration.copyWith(
+                                    labelText: "Password",
+                                    prefixIcon: const Icon(Icons.password),
+                                    suffixIcon: IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            obfuscate = !obfuscate;
+                                          });
+                                        },
+                                        icon: Icon(obfuscate
+                                            ? Icons.remove_red_eye_rounded
+                                            : CupertinoIcons.eye_slash))),
+                                focusNode: passwordFn,
+                                controller: password,
+                                onEditingComplete: () {
+                                  passwordFn.unfocus();
 
-                              ///call submit maybe?
-                            },
-                            validator: MultiValidator([
-                              RequiredValidator(
-                                  errorText: "Password is required"),
-                              MinLengthValidator(12,
-                                  errorText:
-                                      "Password must be at least 12 characters long"),
-                              MaxLengthValidator(128,
-                                  errorText:
-                                      "Password cannot exceed 72 characters"),
-                              PatternValidator(
-                                  r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+?\-=[\]{};':,.<>]).*$",
-                                  errorText:
-                                      'Password must contain at least one symbol, one uppercase letter, one lowercase letter, and one number.')
-                            ]).call,
+                                  ///call submit maybe?
+                                },
+                                validator: MultiValidator([
+                                  RequiredValidator(
+                                      errorText: "Password is required"),
+                                  MinLengthValidator(12,
+                                      errorText:
+                                          "Password must be at least 12 characters long"),
+                                  MaxLengthValidator(128,
+                                      errorText:
+                                          "Password cannot exceed 72 characters"),
+                                  PatternValidator(
+                                      r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+?\-=[\]{};':,.<>]).*$",
+                                      errorText:
+                                          'Password must contain at least one symbol, one uppercase letter, one lowercase letter, and one number.')
+                                ]).call,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 3.0),
-                  child: Flexible(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        GlobalRouter.I.router.go(RegistrationScreen.route);
-                      },
-                      child: const Text("No account? Register"),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 3.0),
-                  child: Flexible(
-                    child: ElevatedButton(
-                        onPressed: () {
-                          onSubmit();
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all(Colors.blue),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 3.0),
+                          child: Flexible(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                GlobalRouter.I.router
+                                    .go(RegistrationScreen.route);
+                              },
+                              child: const Text("No account? Register"),
+                            ),
+                          ),
                         ),
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(color: Colors.white),
-                        )),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 3.0),
+                          child: Flexible(
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  onSubmit();
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      WidgetStateProperty.all(Colors.blue),
+                                ),
+                                child: const Text(
+                                  "Login",
+                                  style: TextStyle(color: Colors.white),
+                                )),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

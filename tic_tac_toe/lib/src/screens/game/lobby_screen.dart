@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tic_tac_toe/src/controllers/auth_controller.dart';
 import 'package:tic_tac_toe/src/dialogs/waiting_dialog.dart';
@@ -14,7 +15,7 @@ class LobbyScreen extends StatefulWidget {
 }
 
 class _LobbyScreenState extends State<LobbyScreen> {
-  late TextEditingController gameCode = TextEditingController();
+  late TextEditingController gameCode;
   bool obfuscate = true;
 
   @override
@@ -24,6 +25,44 @@ class _LobbyScreenState extends State<LobbyScreen> {
   }
 
   @override
+  void dispose() {
+    gameCode.dispose();
+    super.dispose();
+  }
+
+  Future<void> createGameSession() async {
+    final gameCodeText = gameCode.text.trim();
+    if (gameCodeText.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enter a game code')),
+        );
+      }
+      return;
+    }
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('game_sessions')
+          .doc(gameCodeText)
+          .set({
+        'gameCode': gameCodeText,
+        'createdAt': Timestamp.now(),
+        'players': [],
+      });
+
+      if (mounted) {
+        Navigator.pushNamed(context, '/gameScreen', arguments: gameCodeText);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to create game session: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +93,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
           Align(
             alignment: const Alignment(0.0, -0.1),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: createGameSession,
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all(
                     const Color.fromARGB(255, 72, 33, 243)),

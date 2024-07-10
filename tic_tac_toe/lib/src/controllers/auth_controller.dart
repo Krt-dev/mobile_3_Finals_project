@@ -16,7 +16,10 @@ class AuthController with ChangeNotifier {
 
   static AuthController get I => GetIt.instance<AuthController>();
 
+  User? user;
+
   AuthState state = AuthState.unauthenticated;
+
   // SimulatedAPI api = SimulatedAPI();
   late StreamSubscription<User?> currentAuthedUser;
 
@@ -37,16 +40,22 @@ class AuthController with ChangeNotifier {
   register(String email, String password) async {
     UserCredential? userCredential = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
+    user = userCredential.user;
+    notifyListeners();
   }
 
   login(String userName, String password) async {
     UserCredential userCredential = await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: userName, password: password);
+    user = userCredential.user;
+    notifyListeners();
   }
 
   ///write code to log out the user and add it to the home page.
-  logout() {
-    return FirebaseAuth.instance.signOut();
+  logout() async {
+    user = null;
+    notifyListeners();
+    return await FirebaseAuth.instance.signOut();
   }
 
   ///must be called in main before runApp

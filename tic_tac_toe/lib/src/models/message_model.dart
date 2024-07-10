@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Message {
-  final String id;
-  final String senderId;
+  final int id;
+  final int senderId;
   final String content;
   final DateTime createdAt; // Assuming this is a timestamp field from Firestore
 
@@ -19,7 +19,7 @@ class Message {
       id: json['id'],
       senderId: json['senderId'],
       content: json['content'],
-      createdAt: (json['createdAt'] as Timestamp)
+      createdAt: (json['timeStamp'] as Timestamp)
           .toDate(), // Convert Timestamp to DateTime
     );
   }

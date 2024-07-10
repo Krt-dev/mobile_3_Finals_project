@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tic_tac_toe/src/enum/enum.dart';
+import 'package:tic_tac_toe/src/models/message_model.dart';
 
 class AuthController with ChangeNotifier {
   // Static method to initialize the singleton in GetIt
@@ -64,6 +66,15 @@ class AuthController with ChangeNotifier {
     listen();
     User? user = FirebaseAuth.instance.currentUser;
     handleUserChanges(user);
+  }
+
+  //message controller testing in auth
+
+  Stream<QuerySnapshot<Object?>> getGameMessages() {
+    return FirebaseFirestore.instance
+        .collection('message')
+        .orderBy('timeStamp', descending: true)
+        .snapshots();
   }
 
   ///https://pub.dev/packages/flutter_secure_storage or any caching dependency of your choice like localstorage, hive, or a db

@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:tic_tac_toe/src/controllers/auth_controller.dart';
 import 'package:tic_tac_toe/src/dialogs/waiting_dialog.dart';
 import 'package:tic_tac_toe/src/routing/router.dart';
+import 'package:intl/intl.dart';
+import 'package:tic_tac_toe/src/services/game_board_services.dart';
+import 'package:tic_tac_toe/src/models/game_model.dart';
 
 class LobbyScreen extends StatefulWidget {
   static const String route = "/lobbyScreen";
@@ -16,12 +19,17 @@ class LobbyScreen extends StatefulWidget {
 
 class _LobbyScreenState extends State<LobbyScreen> {
   late TextEditingController gameCode;
+  late TextEditingController gameSessions;
   bool obfuscate = true;
+  final FirestoreService _firestoreService = FirestoreService();
 
   @override
   void initState() {
     super.initState();
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
     gameCode = TextEditingController();
+    gameSessions = TextEditingController(text: formattedDate);
   }
 
   @override
@@ -32,6 +40,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
 
   Future<void> createGameSession() async {
     final gameCodeText = gameCode.text.trim();
+    final gameSessionText = gameSessions.text.trim();
     if (gameCodeText.isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -42,14 +51,27 @@ class _LobbyScreenState extends State<LobbyScreen> {
     }
 
     try {
-      await FirebaseFirestore.instance
-          .collection('game_sessions')
-          .doc(gameCodeText)
-          .set({
-        'gameCode': gameCodeText,
-        'createdAt': Timestamp.now(),
-        'players': [],
-      });
+      // para debug rani
+      print("Creating game session with game code: $gameCodeText");
+      print("Game session text: $gameSessionText");
+      print("Current user ID: ${AuthController.I.currentUser?.uid}");
+
+      // await FirebaseFirestore.instance
+      //     .collection('Games')
+      //     .doc(gameSessionText)
+      //     .collection('game')
+      //     .add({
+      //   'id': gameCodeText,
+      //   'createdAt': Timestamp.now(),
+      //   //'playerX': AuthController.I.currentUser!.uid,
+      //   'board': "Temporary board",
+      //   //'currentTurn': AuthController.I.currentUser!.uid,
+      //   'gameState': "waiting",
+      //   'winner': "winner",
+      // });
+
+      await _firestoreService.createGame(
+          gameCodeText, AuthController.I.currentUser!.uid);
 
       if (mounted) {
         Navigator.pushNamed(context, '/gameScreen', arguments: gameCodeText);

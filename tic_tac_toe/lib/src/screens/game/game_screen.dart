@@ -10,8 +10,7 @@ class GameScreen extends StatefulWidget {
   final String gameId;
   final String playerId;
 
-  const GameScreen({required this.gameId, required this.playerId, Key? key})
-      : super(key: key);
+  const GameScreen({required this.gameId, required this.playerId, super.key});
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -28,68 +27,90 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var gameId = widget.playerId;
+    var playerId = widget.gameId;
     return Scaffold(
       body: StreamBuilder<Game>(
-        stream: _firestoreService.getGameStream(widget.gameId),
+        // stream: _firestoreService.getGameStream(widget.gameId),
+        stream: _firestoreService.getGameStream(gameId),
+
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
+          print(snapshot.data?.board);
+          print("playerID" + widget.playerId);
+          print("gameID" + widget.gameId);
+          if (snapshot.hasError) {
+            return const Text("error");
           }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Text("Loading");
+          }
+          if (snapshot.hasData) {
+            Game game = snapshot.data!;
+            bool isPlayerTurn = game.currentTurn == playerId;
 
-          Game game = snapshot.data!;
-          bool isPlayerTurn = game.currentTurn == widget.playerId;
-
-          return Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/tictacBG.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GridView.builder(
-                  shrinkWrap: true,
-                  itemCount: 9,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
+            return Scaffold(
+              body: Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/tictacBG.png'),
+                    fit: BoxFit.cover,
                   ),
-                  itemBuilder: (context, index) {
-                    int row = index ~/ 3;
-                    int col = index % 3;
-                    return GestureDetector(
-                      onTap: isPlayerTurn && game.board[index] == ''
-                          ? () => _makeMove(row, col, game)
-                          : null,
-                      child: Container(
-                        margin: const EdgeInsets.all(4.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black),
-                          color: game.board[index] == ''
-                              ? Colors.white
-                              : game.board[index] == 'X'
-                                  ? Colors.red
-                                  : Colors.blue,
-                        ),
-                        child: Center(
-                          child: Text(
-                            game.board[index],
-                            style: const TextStyle(fontSize: 48),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
                 ),
-                if (game.winner != null)
-                  Text(
-                    '${game.winner} wins!',
-                    style: const TextStyle(fontSize: 32, color: Colors.green),
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GridView.builder(
+                      shrinkWrap: true,
+                      itemCount: 9,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                      ),
+                      itemBuilder: (context, index) {
+                        int row = index ~/ 3;
+                        int col = index % 3;
+                        return GestureDetector(
+                          onTap: isPlayerTurn && game.board[index] == ''
+                              ? () => _makeMove(row, col, game)
+                              : null,
+                          child: Container(
+                            margin: const EdgeInsets.all(4.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black),
+                              color: game.board[index] == ''
+                                  ? Colors.white
+                                  : game.board[index] == 'X'
+                                      ? Colors.red
+                                      : Colors.blue,
+                            ),
+                            child: Center(
+                              child: Text(
+                                game.board[index],
+                                style: const TextStyle(fontSize: 48),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    if (game.winner != null)
+                      Text(
+                        '${game.winner} wins!',
+                        style:
+                            const TextStyle(fontSize: 32, color: Colors.green),
+                      ),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return const Center(
+                child: Column(
+              children: [
+                CircularProgressIndicator(),
               ],
-            ),
-          );
+            ));
+          }
         },
       ),
     );

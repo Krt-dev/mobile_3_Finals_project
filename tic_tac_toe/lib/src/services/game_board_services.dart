@@ -35,13 +35,15 @@ class FirestoreService {
     });
   }
 
-  // Get game stream
   Stream<Game> getGameStream(String gameId) {
-    return _db
-        .collection('games')
-        .doc(gameId)
-        .snapshots()
-        .map((doc) => Game.fromFirestore(doc));
+    return _db.collection('games').doc(gameId).snapshots().map((doc) {
+      try {
+        return Game.fromFirestore(doc);
+      } catch (e) {
+        print("Failed to deserialize game: $e");
+        throw e; // Rethrow or handle as needed
+      }
+    });
   }
 
   // Update the winner

@@ -4,6 +4,7 @@ import 'package:tic_tac_toe/src/controllers/auth_controller.dart';
 import 'package:tic_tac_toe/src/dialogs/waiting_dialog.dart';
 import 'package:tic_tac_toe/src/routing/router.dart';
 import 'package:intl/intl.dart';
+import 'package:tic_tac_toe/src/screens/game/game_screen.dart';
 import 'package:tic_tac_toe/src/services/game_board_services.dart';
 import 'package:tic_tac_toe/src/models/game_model.dart';
 
@@ -115,7 +116,14 @@ class _LobbyScreenState extends State<LobbyScreen> {
           Align(
             alignment: const Alignment(0.0, -0.1),
             child: ElevatedButton(
-              onPressed: createGameSession,
+              onPressed: () {
+                createGameSession();
+                GlobalRouter.I.router.go(
+                    "${GameScreen.route}/${gameCode.text.trim()}/${AuthController.I.currentUser?.uid}");
+                print(
+                    "gamePlayerLobby ${AuthController.I.currentUser?.uid}/ngameID:${gameCode.text.trim()}");
+                print("\n\n");
+              },
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all(
                     const Color.fromARGB(255, 72, 33, 243)),

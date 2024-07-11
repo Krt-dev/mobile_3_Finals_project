@@ -86,15 +86,19 @@ class GlobalRouter {
                       return const HomeScreen();
                     }),
                 GoRoute(
-                    parentNavigatorKey: _shellNavigatorKey,
-                    path: GameScreen.route,
-                    name: GameScreen.name,
-                    builder: (context, _) {
-                      return const GameScreen(
-                        gameId: '',
-                        playerId: '',
-                      );
-                    }),
+                  parentNavigatorKey: _shellNavigatorKey,
+                  path: "${GameScreen.route}/:gameId/:playerId",
+                  name: GameScreen.name,
+                  builder: (context, state) {
+                    final String gameId = state.pathParameters['gameId'] ?? "";
+                    final String playerId = state.pathParameters['playerId'] ??
+                        ""; // Corrected parameter name
+                    return GameScreen(
+                      gameId: gameId,
+                      playerId: playerId,
+                    );
+                  },
+                ),
                 GoRoute(
                     parentNavigatorKey: _shellNavigatorKey,
                     path: LobbyScreen.route,

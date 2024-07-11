@@ -26,8 +26,7 @@ class Game {
       id: doc.id,
       playerX: data['playerX'],
       playerO: data['playerO'],
-      board:
-          List<String>.from(data['board'].map((row) => List<String>.from(row))),
+      board: List<String>.from(data['board']),
       currentTurn: data['currentTurn'],
       gameState: data['gameState'],
       winner: data['winner'],

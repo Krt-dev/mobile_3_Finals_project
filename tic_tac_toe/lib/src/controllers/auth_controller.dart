@@ -6,6 +6,8 @@ import 'package:get_it/get_it.dart';
 import 'package:tic_tac_toe/src/enum/enum.dart';
 
 class AuthController with ChangeNotifier {
+  //get currentUser => null;
+
   // Static method to initialize the singleton in GetIt
   static void initialize() {
     GetIt.instance.registerSingleton<AuthController>(AuthController());
@@ -22,6 +24,12 @@ class AuthController with ChangeNotifier {
 
   // SimulatedAPI api = SimulatedAPI();
   late StreamSubscription<User?> currentAuthedUser;
+
+  User? get currentUser => FirebaseAuth.instance.currentUser;
+
+  AuthController() {
+    listen();
+  }
 
   listen() {
     currentAuthedUser =

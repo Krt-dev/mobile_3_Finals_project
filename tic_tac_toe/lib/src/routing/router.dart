@@ -90,7 +90,10 @@ class GlobalRouter {
                     path: GameScreen.route,
                     name: GameScreen.name,
                     builder: (context, _) {
-                      return const GameScreen();
+                      return const GameScreen(
+                        gameId: '',
+                        playerId: '',
+                      );
                     }),
                 GoRoute(
                     parentNavigatorKey: _shellNavigatorKey,

@@ -39,6 +39,37 @@ class _LobbyScreenState extends State<LobbyScreen> {
     super.dispose();
   }
 
+  Future<void> joinGameSession() async {
+    final gameCodeText = gameCode.text.trim();
+    if (gameCodeText.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enter a game code')),
+        );
+      }
+      return;
+    }
+
+    try {
+      // para debug rani
+      print("Creating game session with game code: $gameCodeText");
+      print("Current user ID: ${AuthController.I.currentUser?.uid}");
+
+      await _firestoreService.joinGame(
+          gameCodeText, AuthController.I.currentUser!.uid);
+
+      if (mounted) {
+        Navigator.pushNamed(context, '/gameScreen', arguments: gameCodeText);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to join game session: $e')),
+        );
+      }
+    }
+  }
+
   Future<void> createGameSession() async {
     final gameCodeText = gameCode.text.trim();
     final gameSessionText = gameSessions.text.trim();
@@ -56,20 +87,6 @@ class _LobbyScreenState extends State<LobbyScreen> {
       print("Creating game session with game code: $gameCodeText");
       print("Game session text: $gameSessionText");
       print("Current user ID: ${AuthController.I.currentUser?.uid}");
-
-      // await FirebaseFirestore.instance
-      //     .collection('Games')
-      //     .doc(gameSessionText)
-      //     .collection('game')
-      //     .add({
-      //   'id': gameCodeText,
-      //   'createdAt': Timestamp.now(),
-      //   //'playerX': AuthController.I.currentUser!.uid,
-      //   'board': "Temporary board",
-      //   //'currentTurn': AuthController.I.currentUser!.uid,
-      //   'gameState': "waiting",
-      //   'winner': "winner",
-      // });
 
       await _firestoreService.createGame(
           gameCodeText, AuthController.I.currentUser!.uid);
@@ -102,7 +119,11 @@ class _LobbyScreenState extends State<LobbyScreen> {
           Align(
             alignment: const Alignment(0.0, -0.3),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                joinGameSession();
+                GlobalRouter.I.router.go(
+                    "${GameScreen.route}/${gameCode.text.trim()}/${AuthController.I.currentUser?.uid}");
+              },
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all(
                     const Color.fromARGB(255, 33, 243, 114)),
@@ -114,7 +135,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
             ),
           ),
           Align(
-            alignment: const Alignment(0.0, -0.1),
+            alignment: const Alignment(0.0, -0.15),
             child: ElevatedButton(
               onPressed: () {
                 createGameSession();
@@ -130,6 +151,26 @@ class _LobbyScreenState extends State<LobbyScreen> {
               ),
               child: const Text(
                 "CREATE GAME",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+          Align(
+            alignment: const Alignment(0.0, -0.0),
+            child: ElevatedButton(
+              onPressed: () {
+                GlobalRouter.I.router.go(
+                    "${GameScreen.route}/${gameCode.text.trim()}/${AuthController.I.currentUser?.uid}");
+                print(
+                    "gamePlayerLobby ${AuthController.I.currentUser?.uid}/ngameID:${gameCode.text.trim()}");
+                print("\n\n");
+              },
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(
+                    const Color.fromARGB(255, 72, 33, 243)),
+              ),
+              child: const Text(
+                "GO BACK TO GAME",
                 style: TextStyle(color: Colors.white),
               ),
             ),

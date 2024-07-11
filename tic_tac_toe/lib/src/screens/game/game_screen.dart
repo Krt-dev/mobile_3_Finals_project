@@ -27,12 +27,10 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var gameId = widget.playerId;
-    var playerId = widget.gameId;
     return Scaffold(
       body: StreamBuilder<Game>(
         // stream: _firestoreService.getGameStream(widget.gameId),
-        stream: _firestoreService.getGameStream(gameId),
+        stream: _firestoreService.getGameStream(widget.gameId),
 
         builder: (context, snapshot) {
           print(snapshot.data?.board);
@@ -46,7 +44,7 @@ class _GameScreenState extends State<GameScreen> {
           }
           if (snapshot.hasData) {
             Game game = snapshot.data!;
-            bool isPlayerTurn = game.currentTurn == playerId;
+            bool isPlayerTurn = game.currentTurn == widget.playerId;
 
             return Scaffold(
               body: Container(

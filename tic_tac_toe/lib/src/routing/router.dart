@@ -91,8 +91,8 @@ class GlobalRouter {
                   name: GameScreen.name,
                   builder: (context, state) {
                     final String gameId = state.pathParameters['gameId'] ?? "";
-                    final String playerId = state.pathParameters['playerId'] ??
-                        ""; // Corrected parameter name
+                    final String playerId =
+                        state.pathParameters['playerId'] ?? "";
                     return GameScreen(
                       gameId: gameId,
                       playerId: playerId,

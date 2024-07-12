@@ -148,13 +148,13 @@ class _GameScreenState extends State<GameScreen> {
                                               print("print: " +
                                                   curmessage.senderID);
                                               return Row(
-                                                mainAxisAlignment: (curmessage
+                                                crossAxisAlignment: (curmessage
                                                             .senderID
                                                             .toString() ==
                                                         AuthController
                                                             .I.currentUser?.uid)
-                                                    ? MainAxisAlignment.end
-                                                    : MainAxisAlignment.start,
+                                                    ? CrossAxisAlignment.end
+                                                    : CrossAxisAlignment.start,
                                                 children: [
                                                   Container(
                                                     margin: const EdgeInsets

@@ -132,6 +132,7 @@ class _GameScreenState extends State<GameScreen> {
                                             snapshot.data as QuerySnapshot;
                                         print(dataSnapShot.docs.length);
                                         return ListView.builder(
+                                            reverse: true,
                                             itemCount: dataSnapShot.docs.length,
                                             itemBuilder: (context, index) {
                                               Message curmessage =

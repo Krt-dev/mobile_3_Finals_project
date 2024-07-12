@@ -48,7 +48,30 @@ class _GameScreenState extends State<GameScreen> {
           if (snapshot.hasData) {
             Game game = snapshot.data!;
             bool isPlayerTurn = game.currentTurn == widget.playerId;
-
+            if (game.playerO == "") {
+              return const Padding(
+                padding: EdgeInsets.only(top: 100.0),
+                child: Center(
+                    child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 100),
+                      child: Text(
+                        "Waiting for a match",
+                        style: TextStyle(
+                            fontSize: 25,
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    CircularProgressIndicator(
+                      color: Colors.blue,
+                      strokeWidth: 25,
+                    )
+                  ],
+                )),
+              );
+            }
             return Scaffold(
               body: Container(
                 decoration: const BoxDecoration(

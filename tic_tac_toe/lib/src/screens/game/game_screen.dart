@@ -1,7 +1,12 @@
+import 'dart:js_interop';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:tic_tac_toe/src/controllers/auth_controller.dart';
 import 'package:tic_tac_toe/src/models/game_model.dart';
+import 'package:tic_tac_toe/src/models/message_model.dart';
 import 'package:tic_tac_toe/src/services/game_board_services.dart';
+import 'package:uuid/uuid.dart';
 
 class GameScreen extends StatefulWidget {
   static const String route = '/gameScreen';
@@ -97,6 +102,125 @@ class _GameScreenState extends State<GameScreen> {
                         style:
                             const TextStyle(fontSize: 32, color: Colors.green),
                       ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Container(
+                        width: 400,
+                        height: 150,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Column(
+                          children: [
+                            Expanded(
+                                child: Container(
+                              child: StreamBuilder(
+                                  stream: FirebaseFirestore.instance
+                                      .collection('games')
+                                      .doc(widget.gameId)
+                                      .collection('chats')
+                                      .orderBy('createdAt', descending: false)
+                                      .snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.active) {
+                                      print(widget.gameId);
+
+                                      if (snapshot.hasData) {
+                                        QuerySnapshot dataSnapShot =
+                                            snapshot.data as QuerySnapshot;
+                                        print(dataSnapShot.docs.length);
+                                        return ListView.builder(
+                                            itemCount: dataSnapShot.docs.length,
+                                            itemBuilder: (context, index) {
+                                              Message curmessage =
+                                                  Message.fromJson(dataSnapShot
+                                                          .docs[index]
+                                                          .data()
+                                                      as Map<String, dynamic>);
+
+                                              print("currentUSer");
+                                              print(AuthController
+                                                  .I.currentUser?.uid);
+                                              print("sender");
+                                              print("print: " +
+                                                  curmessage.senderID);
+                                              return Row(
+                                                mainAxisAlignment: (curmessage
+                                                            .senderID
+                                                            .toString() ==
+                                                        AuthController
+                                                            .I.currentUser?.uid)
+                                                    ? MainAxisAlignment.end
+                                                    : MainAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    margin: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 10),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical: 6,
+                                                        horizontal: 10),
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                        color:
+                                                            Color(0xFF00D2FF)),
+                                                    child: Text(
+                                                        style: const TextStyle(
+                                                          fontSize: 15,
+                                                        ),
+                                                        curmessage.content
+                                                            .toString()),
+                                                  ),
+                                                ],
+                                              );
+                                            });
+                                      } else if (snapshot.hasError) {
+                                        return const Center(
+                                          child: Text("Snapshot Error"),
+                                        );
+                                      } else {
+                                        return const Center(
+                                          child: Text("Error occured"),
+                                        );
+                                      }
+                                    } else {
+                                      return const Center(
+                                        child: Text(
+                                            "Snapshot Connection state not active"),
+                                      );
+                                    }
+                                  }),
+                            )),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 5),
+                              child: Row(
+                                children: [
+                                  Flexible(
+                                      child: TextField(
+                                    controller: messageController,
+                                    decoration: InputDecoration(
+                                        hintText: "Enter Chat",
+                                        border: InputBorder.none),
+                                  )),
+                                  IconButton(
+                                      onPressed: sendMessage,
+                                      icon: const Icon(Icons.send))
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -112,6 +236,29 @@ class _GameScreenState extends State<GameScreen> {
         },
       ),
     );
+  }
+
+  final TextEditingController messageController = TextEditingController();
+  var uuid = Uuid();
+  String? Sender = AuthController.I.currentUser?.uid;
+  void sendMessage() {
+    String msg = messageController.text.trim();
+
+    if (msg != '') {
+      Message newmessage = Message(
+          id: uuid.v1(),
+          senderID: Sender.toString(),
+          content: msg,
+          createdAt: DateTime.now());
+      FirebaseFirestore.instance
+          .collection("games")
+          .doc(widget.gameId)
+          .collection("chats")
+          .doc(newmessage.id)
+          .set(newmessage.toJson());
+    }
+
+    messageController.clear();
   }
 
   void _makeMove(int row, int col, Game game) async {

@@ -120,13 +120,12 @@ class _GameScreenState extends State<GameScreen> {
                                       .collection('games')
                                       .doc(widget.gameId)
                                       .collection('chats')
-                                      .orderBy('createdAt', descending: false)
+                                      .orderBy('createdAt', descending: true)
                                       .snapshots(),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.active) {
                                       print(widget.gameId);
-
                                       if (snapshot.hasData) {
                                         QuerySnapshot dataSnapShot =
                                             snapshot.data as QuerySnapshot;
@@ -140,7 +139,8 @@ class _GameScreenState extends State<GameScreen> {
                                                           .docs[index]
                                                           .data()
                                                       as Map<String, dynamic>);
-
+                                              print("content: " +
+                                                  curmessage.content);
                                               print("currentUSer");
                                               print(AuthController
                                                   .I.currentUser?.uid);
@@ -156,28 +156,35 @@ class _GameScreenState extends State<GameScreen> {
                                                     ? CrossAxisAlignment.end
                                                     : CrossAxisAlignment.start,
                                                 children: [
-                                                  Container(
-                                                    margin: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 10,
-                                                        vertical: 10),
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        vertical: 6,
-                                                        horizontal: 10),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(15),
-                                                        color:
-                                                            Color(0xFF00D2FF)),
-                                                    child: Text(
+                                                  Flexible(
+                                                    child: Container(
+                                                      constraints:
+                                                          const BoxConstraints(
+                                                        maxWidth: 230,
+                                                      ),
+                                                      margin: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 10,
+                                                          vertical: 10),
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          vertical: 6,
+                                                          horizontal: 10),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                          color: Color(
+                                                              0xFF00D2FF)),
+                                                      child: Text(
                                                         style: const TextStyle(
                                                           fontSize: 15,
                                                         ),
                                                         curmessage.content
-                                                            .toString()),
-                                                  ),
+                                                            .toString(),
+                                                      ),
+                                                    ),
+                                                  )
                                                 ],
                                               );
                                             });

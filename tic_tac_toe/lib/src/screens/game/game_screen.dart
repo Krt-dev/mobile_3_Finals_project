@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:tic_tac_toe/src/controllers/auth_controller.dart';
 import 'package:tic_tac_toe/src/models/game_model.dart';
@@ -21,11 +22,20 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
   late FirestoreService _firestoreService;
+  late ConfettiController _controllerConfetti;
 
   @override
   void initState() {
     super.initState();
     _firestoreService = FirestoreService();
+    _controllerConfetti =
+        ConfettiController(duration: const Duration(seconds: 5));
+  }
+
+  @override
+  void dispose() {
+    _controllerConfetti.dispose();
+    super.dispose();
   }
 
   @override
@@ -83,6 +93,15 @@ class _GameScreenState extends State<GameScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Text(
+                      'Current Player: ${game.currentTurn == game.playerX ? "Player X" : "Player O"}',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                     GridView.builder(
                       shrinkWrap: true,
                       itemCount: 9,
@@ -120,10 +139,25 @@ class _GameScreenState extends State<GameScreen> {
                     if (game.winner != null)
                       Text(
                         '${game.winner} wins!',
-                        style:
-                            const TextStyle(fontSize: 32, color: Colors.green),
+                        style: const TextStyle(
+                            fontSize: 45,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green),
                       ),
-                    SizedBox(
+                    ConfettiWidget(
+                      confettiController: _controllerConfetti,
+                      blastDirectionality: BlastDirectionality.explosive,
+                      shouldLoop: false,
+                      colors: const [
+                        Colors.green,
+                        Colors.blue,
+                        Colors.pink,
+                        Colors.orange,
+                        Colors.purple,
+                        Colors.yellow
+                      ],
+                    ),
+                    const SizedBox(
                       height: 30,
                     ),
                     Padding(
@@ -197,7 +231,7 @@ class _GameScreenState extends State<GameScreen> {
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(15),
-                                                          color: Color(
+                                                          color: const Color(
                                                               0xFF00D2FF)),
                                                       child: Text(
                                                         style: const TextStyle(
@@ -236,7 +270,7 @@ class _GameScreenState extends State<GameScreen> {
                                   Flexible(
                                       child: TextField(
                                     controller: messageController,
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                         hintText: "Enter Chat",
                                         border: InputBorder.none),
                                   )),
@@ -268,7 +302,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   final TextEditingController messageController = TextEditingController();
-  var uuid = Uuid();
+  var uuid = const Uuid();
   String? Sender = AuthController.I.currentUser?.uid;
   void sendMessage() {
     String msg = messageController.text.trim();
@@ -305,34 +339,13 @@ class _GameScreenState extends State<GameScreen> {
 
     if (winner != null) {
       await _firestoreService.updateWinner(game.id, winner);
+      showConfetti();
     }
   }
 
-  // String? _checkWinner(List<List<String>> board) {
-  //   for (int i = 0; i < 3; i++) {
-  //     if (board[i][0] != '' &&
-  //         board[i][0] == board[i][1] &&
-  //         board[i][1] == board[i][2]) {
-  //       return board[i][0];
-  //     }
-  //     if (board[0][i] != '' &&
-  //         board[0][i] == board[1][i] &&
-  //         board[1][i] == board[2][i]) {
-  //       return board[0][i];
-  //     }
-  //   }
-  //   if (board[0][0] != '' &&
-  //       board[0][0] == board[1][1] &&
-  //       board[1][1] == board[2][2]) {
-  //     return board[0][0];
-  //   }
-  //   if (board[0][2] != '' &&
-  //       board[0][2] == board[1][1] &&
-  //       board[1][1] == board[2][0]) {
-  //     return board[0][2];
-  //   }
-  //   return null;
-  // }
+  void showConfetti() {
+    _controllerConfetti.play();
+  }
 
   String? _checkWinner(List<String> board) {
     List<List<int>> winningCombinations = [

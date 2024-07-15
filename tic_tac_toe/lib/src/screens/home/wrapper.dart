@@ -17,7 +17,7 @@ class HomeWrapper extends StatefulWidget {
 class _HomeWrapperState extends State<HomeWrapper> {
   int index = 0;
 
-  List<String> routes = [HomeScreen.route, GameScreen.route, LobbyScreen.route];
+  List<String> routes = [HomeScreen.route, LobbyScreen.route];
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +34,8 @@ class _HomeWrapperState extends State<HomeWrapper> {
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.games), label: "Game"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.beach_access), label: "Lobby")
+              icon: Icon(Icons.beach_access), label: "Lobby"),
         ],
       ),
     );

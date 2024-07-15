@@ -116,18 +116,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                         ///call submit maybe?
                       },
-                      validator: MultiValidator([
-                        RequiredValidator(errorText: "Password is required"),
-                        MinLengthValidator(12,
-                            errorText:
-                                "Password must be at least 12 characters long"),
-                        MaxLengthValidator(128,
-                            errorText: "Password cannot exceed 72 characters"),
-                        PatternValidator(
-                            r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+?\-=[\]{};':,.<>]).*$",
-                            errorText:
-                                'Password must contain at least one symbol, one uppercase letter, one lowercase letter, and one number.')
-                      ]).call,
+                      // validator: MultiValidator([
+                      //   RequiredValidator(errorText: "Password is required"),
+                      //   MinLengthValidator(12,
+                      //       errorText:
+                      //           "Password must be at least 12 characters long"),
+                      //   MaxLengthValidator(128,
+                      //       errorText: "Password cannot exceed 72 characters"),
+                      //   PatternValidator(
+                      //       r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+?\-=[\]{};':,.<>]).*$",
+                      //       errorText:
+                      //           'Password must contain at least one symbol, one uppercase letter, one lowercase letter, and one number.')
+                      // ]).call,
                     ),
                   ),
                   const SizedBox(
@@ -135,49 +135,50 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   Flexible(
                     child: TextFormField(
-                        keyboardType: TextInputType.visiblePassword,
-                        obscureText: obfuscate,
-                        decoration: decoration.copyWith(
-                            labelText: "Confirm Password",
-                            prefixIcon: const Icon(Icons.password),
-                            suffixIcon: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    obfuscate = !obfuscate;
-                                  });
-                                },
-                                icon: Icon(obfuscate
-                                    ? Icons.remove_red_eye_rounded
-                                    : CupertinoIcons.eye_slash))),
-                        focusNode: password2Fn,
-                        controller: password2,
-                        onEditingComplete: () {
-                          password2Fn.unfocus();
-                        },
-                        validator: (v) {
-                          String? doesMatchPasswords =
-                              password.text == password2.text
-                                  ? null
-                                  : "Passwords doesn't match";
-                          if (doesMatchPasswords != null) {
-                            return doesMatchPasswords;
-                          } else {
-                            return MultiValidator([
-                              RequiredValidator(
-                                  errorText: "Password is required"),
-                              MinLengthValidator(12,
-                                  errorText:
-                                      "Password must be at least 12 characters long"),
-                              MaxLengthValidator(128,
-                                  errorText:
-                                      "Password cannot exceed 72 characters"),
-                              PatternValidator(
-                                  r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+?\-=[\]{};':,.<>]).*$",
-                                  errorText:
-                                      'Password must contain at least one symbol, one uppercase letter, one lowercase letter, and one number.'),
-                            ]).call(v);
-                          }
-                        }),
+                      keyboardType: TextInputType.visiblePassword,
+                      obscureText: obfuscate,
+                      decoration: decoration.copyWith(
+                          labelText: "Confirm Password",
+                          prefixIcon: const Icon(Icons.password),
+                          suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  obfuscate = !obfuscate;
+                                });
+                              },
+                              icon: Icon(obfuscate
+                                  ? Icons.remove_red_eye_rounded
+                                  : CupertinoIcons.eye_slash))),
+                      focusNode: password2Fn,
+                      controller: password2,
+                      onEditingComplete: () {
+                        password2Fn.unfocus();
+                      },
+                      // validator: (v) {
+                      //   String? doesMatchPasswords =
+                      //       password.text == password2.text
+                      //           ? null
+                      //           : "Passwords doesn't match";
+                      //   if (doesMatchPasswords != null) {
+                      //     return doesMatchPasswords;
+                      //   } else {
+                      //     return MultiValidator([
+                      //       RequiredValidator(
+                      //           errorText: "Password is required"),
+                      //       MinLengthValidator(12,
+                      //           errorText:
+                      //               "Password must be at least 12 characters long"),
+                      //       MaxLengthValidator(128,
+                      //           errorText:
+                      //               "Password cannot exceed 72 characters"),
+                      //       PatternValidator(
+                      //           r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+?\-=[\]{};':,.<>]).*$",
+                      //           errorText:
+                      //               'Password must contain at least one symbol, one uppercase letter, one lowercase letter, and one number.'),
+                      //     ]).call(v);
+                      //   }
+                      // }
+                    ),
                   ),
                   Container(
                     margin: const EdgeInsets.symmetric(
@@ -186,6 +187,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () {
+                        print("registerDebug");
                         onSubmit();
                       },
                       style: ButtonStyle(
@@ -209,11 +211,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   onSubmit() {
-    if (formKey.currentState?.validate() ?? false) {
-      WaitingDialog.show(context,
-          future: AuthController.I
-              .register(username.text.trim(), password.text.trim()));
-    }
+    // if (formKey.currentState?.validate() ?? false) {
+    print("registering");
+    WaitingDialog.show(context,
+        future: AuthController.I
+            .register(username.text.trim(), password.text.trim()));
+    // }
   }
 
   final OutlineInputBorder _baseBorder = const OutlineInputBorder(

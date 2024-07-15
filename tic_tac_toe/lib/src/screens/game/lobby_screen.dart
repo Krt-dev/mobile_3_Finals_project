@@ -1,12 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tic_tac_toe/src/controllers/auth_controller.dart';
-import 'package:tic_tac_toe/src/dialogs/waiting_dialog.dart';
 import 'package:tic_tac_toe/src/routing/router.dart';
 import 'package:intl/intl.dart';
 import 'package:tic_tac_toe/src/screens/game/game_screen.dart';
 import 'package:tic_tac_toe/src/services/game_board_services.dart';
-import 'package:tic_tac_toe/src/models/game_model.dart';
 
 class LobbyScreen extends StatefulWidget {
   static const String route = "/lobbyScreen";

@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tic_tac_toe/src/controllers/auth_controller.dart';
@@ -50,7 +48,30 @@ class _GameScreenState extends State<GameScreen> {
           if (snapshot.hasData) {
             Game game = snapshot.data!;
             bool isPlayerTurn = game.currentTurn == widget.playerId;
-
+            if (game.playerO == "") {
+              return const Padding(
+                padding: EdgeInsets.only(top: 100.0),
+                child: Center(
+                    child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 100),
+                      child: Text(
+                        "Waiting for a match",
+                        style: TextStyle(
+                            fontSize: 25,
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    CircularProgressIndicator(
+                      color: Colors.blue,
+                      strokeWidth: 25,
+                    )
+                  ],
+                )),
+              );
+            }
             return Scaffold(
               body: Container(
                 decoration: const BoxDecoration(
@@ -122,18 +143,18 @@ class _GameScreenState extends State<GameScreen> {
                                       .collection('games')
                                       .doc(widget.gameId)
                                       .collection('chats')
-                                      .orderBy('createdAt', descending: false)
+                                      .orderBy('createdAt', descending: true)
                                       .snapshots(),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==
                                         ConnectionState.active) {
                                       print(widget.gameId);
-
                                       if (snapshot.hasData) {
                                         QuerySnapshot dataSnapShot =
                                             snapshot.data as QuerySnapshot;
                                         print(dataSnapShot.docs.length);
                                         return ListView.builder(
+                                            reverse: true,
                                             itemCount: dataSnapShot.docs.length,
                                             itemBuilder: (context, index) {
                                               Message curmessage =
@@ -141,7 +162,8 @@ class _GameScreenState extends State<GameScreen> {
                                                           .docs[index]
                                                           .data()
                                                       as Map<String, dynamic>);
-
+                                              print("content: " +
+                                                  curmessage.content);
                                               print("currentUSer");
                                               print(AuthController
                                                   .I.currentUser?.uid);
@@ -149,36 +171,43 @@ class _GameScreenState extends State<GameScreen> {
                                               print("print: " +
                                                   curmessage.senderID);
                                               return Row(
-                                                mainAxisAlignment: (curmessage
+                                                crossAxisAlignment: (curmessage
                                                             .senderID
                                                             .toString() ==
                                                         AuthController
                                                             .I.currentUser?.uid)
-                                                    ? MainAxisAlignment.end
-                                                    : MainAxisAlignment.start,
+                                                    ? CrossAxisAlignment.end
+                                                    : CrossAxisAlignment.start,
                                                 children: [
-                                                  Container(
-                                                    margin: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 10,
-                                                        vertical: 10),
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        vertical: 6,
-                                                        horizontal: 10),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(15),
-                                                        color:
-                                                            Color(0xFF00D2FF)),
-                                                    child: Text(
+                                                  Flexible(
+                                                    child: Container(
+                                                      constraints:
+                                                          const BoxConstraints(
+                                                        maxWidth: 230,
+                                                      ),
+                                                      margin: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 10,
+                                                          vertical: 10),
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          vertical: 6,
+                                                          horizontal: 10),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                          color: Color(
+                                                              0xFF00D2FF)),
+                                                      child: Text(
                                                         style: const TextStyle(
                                                           fontSize: 15,
                                                         ),
                                                         curmessage.content
-                                                            .toString()),
-                                                  ),
+                                                            .toString(),
+                                                      ),
+                                                    ),
+                                                  )
                                                 ],
                                               );
                                             });

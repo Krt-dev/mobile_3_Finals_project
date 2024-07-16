@@ -27,8 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     formKey = GlobalKey<FormState>();
-    username = TextEditingController(text: "kurt.sanchez.20@usjr.edu.ph");
-    password = TextEditingController(text: "#Iamawesome45abcABC");
+    username = TextEditingController();
+    password = TextEditingController();
     usernameFn = FocusNode();
     passwordFn = FocusNode();
   }
@@ -94,11 +94,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             validator: MultiValidator([
                               RequiredValidator(
                                   errorText: 'Please fill out the username'),
-                              MaxLengthValidator(32,
-                                  errorText:
-                                      "Username cannot exceed 32 characters"),
                               EmailValidator(
-                                  errorText: "Please select a valid email"),
+                                  errorText: "Please input a valid email"),
                             ]).call,
                           ),
                         ),
@@ -134,16 +131,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               validator: MultiValidator([
                                 RequiredValidator(
                                     errorText: "Password is required"),
-                                MinLengthValidator(12,
-                                    errorText:
-                                        "Password must be at least 12 characters long"),
-                                MaxLengthValidator(128,
-                                    errorText:
-                                        "Password cannot exceed 72 characters"),
-                                PatternValidator(
-                                    r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+?\-=[\]{};':,.<>]).*$",
-                                    errorText:
-                                        'Password must contain at least one symbol, one uppercase letter, one lowercase letter, and one number.')
                               ]).call,
                             ),
                           ),

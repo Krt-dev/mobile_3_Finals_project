@@ -153,26 +153,6 @@ class _LobbyScreenState extends State<LobbyScreen> {
             ),
           ),
           Align(
-            alignment: const Alignment(0.0, -0.0),
-            child: ElevatedButton(
-              onPressed: () {
-                GlobalRouter.I.router.go(
-                    "${GameScreen.route}/${gameCode.text.trim()}/${AuthController.I.currentUser?.uid}");
-                print(
-                    "gamePlayerLobby ${AuthController.I.currentUser?.uid}/ngameID:${gameCode.text.trim()}");
-                print("\n\n");
-              },
-              style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all(
-                    const Color.fromARGB(255, 72, 33, 243)),
-              ),
-              child: const Text(
-                "GO BACK TO GAME",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
-          Align(
               alignment: const Alignment(0.0, -.5),
               child: Padding(
                   padding: const EdgeInsets.only(

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:tic_tac_toe/src/controllers/auth_controller.dart';
 import 'package:tic_tac_toe/src/dialogs/waiting_dialog.dart';
+import 'package:tic_tac_toe/src/routing/router.dart';
+import 'package:tic_tac_toe/src/screens/auth/login.screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String route = "/register";
@@ -181,8 +183,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 45, vertical: 40),
+                    margin: const EdgeInsets.symmetric(horizontal: 45),
                     height: 62,
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
@@ -198,6 +199,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         "Register",
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 45),
+                    height: 62,
+                    alignment: Alignment.bottomCenter,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        GlobalRouter.I.router.go(LoginScreen.route);
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(
+                            Color.fromARGB(255, 194, 208, 212)),
+                      ),
+                      child: const Text(
+                        "Back To Login Page",
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),

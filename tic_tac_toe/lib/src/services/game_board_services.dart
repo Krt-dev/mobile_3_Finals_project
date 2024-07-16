@@ -46,7 +46,7 @@ class FirestoreService {
         return Game.fromFirestore(doc);
       } catch (e) {
         print("Failed to deserialize game: $e");
-        throw e; // Rethrow or handle as needed
+        throw e;
       }
     });
   }

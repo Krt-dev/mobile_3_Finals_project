@@ -42,9 +42,7 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder<Game>(
-        // stream: _firestoreService.getGameStream(widget.gameId),
         stream: _firestoreService.getGameStream(widget.gameId),
-
         builder: (context, snapshot) {
           print(snapshot.data?.board);
           print("playerID" + widget.playerId);

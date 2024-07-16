@@ -67,7 +67,8 @@ class _LobbyScreenState extends State<LobbyScreen> {
         return;
       } else {
         if (mounted) {
-          Navigator.pushNamed(context, '/gameScreen', arguments: gameCodeText);
+          GlobalRouter.I.router.go(
+              "${GameScreen.route}/${gameCode.text.trim()}/${AuthController.I.currentUser?.uid}");
         }
         return;
       }
@@ -145,8 +146,8 @@ class _LobbyScreenState extends State<LobbyScreen> {
             child: ElevatedButton(
               onPressed: () {
                 joinGameSession();
-                GlobalRouter.I.router.go(
-                    "${GameScreen.route}/${gameCode.text.trim()}/${AuthController.I.currentUser?.uid}");
+                // GlobalRouter.I.router.go(
+                //     "${GameScreen.route}/${gameCode.text.trim()}/${AuthController.I.currentUser?.uid}");
               },
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all(

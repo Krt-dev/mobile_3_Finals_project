@@ -38,6 +38,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
 
   Future<void> joinGameSession() async {
     final gameCodeText = gameCode.text.trim();
+
     if (gameCodeText.isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -46,18 +47,44 @@ class _LobbyScreenState extends State<LobbyScreen> {
       }
       return;
     }
-
+    bool gameExists = await _firestoreService.doesGameExist(gameCodeText);
     try {
       // para debug rani
       print("Creating game session with game code: $gameCodeText");
       print("Current user ID: ${AuthController.I.currentUser?.uid}");
 
+      //bool gameExists = await _firestoreService.doesGameExist(gameCodeText);
       await _firestoreService.joinGame(
           gameCodeText, AuthController.I.currentUser!.uid);
-
-      if (mounted) {
-        Navigator.pushNamed(context, '/gameScreen', arguments: gameCodeText);
+      if (!gameExists) {
+        if (mounted) {
+          print("mounted");
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Game code does not exist')),
+          );
+        }
+        return;
+      } else {
+        if (mounted) {
+          Navigator.pushNamed(context, '/gameScreen', arguments: gameCodeText);
+        }
+        return;
       }
+
+      // if (gameExists) {
+      //   if (mounted) {
+      //     Navigator.pushNamed(context, '/gameScreen', arguments: gameCodeText);
+      //   }
+      //   return;
+      // }
+
+      // await _firestoreService.joinGame(
+      //     gameCodeText, AuthController.I.currentUser!.uid);
+
+      // if (mounted) {
+      //   Navigator.pushNamed(context, '/gameScreen', arguments: gameCodeText);
+      // }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

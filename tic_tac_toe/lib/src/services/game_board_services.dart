@@ -26,6 +26,11 @@ class FirestoreService {
     });
   }
 
+  Future<bool> doesGameExist(String gameCode) async {
+    final doc = await _db.collection('games').doc(gameCode).get();
+    return doc.exists;
+  }
+
   // Update the game board
   Future<void> updateGameBoard(
       String gameId, List<String> board, String currentTurn) {

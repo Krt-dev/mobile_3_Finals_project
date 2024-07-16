@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               RequiredValidator(
                                   errorText: 'Please fill out the username'),
                               EmailValidator(
-                                  errorText: "Please input a valid email"),
+                                  errorText: "Please select a valid email"),
                             ]).call,
                           ),
                         ),

@@ -81,208 +81,216 @@ class _GameScreenState extends State<GameScreen> {
               );
             }
             return Scaffold(
-              body: Container(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/tictacBG.png'),
-                    fit: BoxFit.cover,
+              body: SingleChildScrollView(
+                child: Container(
+                  height: 750,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/tictacBG.png'),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Current Player: ${game.currentTurn == game.playerX ? "Player X" : "Player O"}',
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      itemCount: 9,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                      ),
-                      itemBuilder: (context, index) {
-                        int row = index ~/ 3;
-                        int col = index % 3;
-                        return GestureDetector(
-                          onTap: isPlayerTurn && game.board[index] == ''
-                              ? () => _makeMove(row, col, game)
-                              : null,
-                          child: Container(
-                            margin: const EdgeInsets.all(4.0),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black),
-                              color: game.board[index] == ''
-                                  ? Colors.white
-                                  : game.board[index] == 'X'
-                                      ? Colors.red
-                                      : Colors.blue,
-                            ),
-                            child: Center(
-                              child: Text(
-                                game.board[index],
-                                style: const TextStyle(fontSize: 48),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    if (game.winner != null)
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                       Text(
-                        '${game.winner} wins!',
+                        'Current Player: ${game.currentTurn == game.playerX ? "Player X" : "Player O"}',
                         style: const TextStyle(
-                            fontSize: 45,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green),
-                      ),
-                    ConfettiWidget(
-                      confettiController: _controllerConfetti,
-                      blastDirectionality: BlastDirectionality.explosive,
-                      shouldLoop: false,
-                      colors: const [
-                        Colors.green,
-                        Colors.blue,
-                        Colors.pink,
-                        Colors.orange,
-                        Colors.purple,
-                        Colors.yellow
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Container(
-                        width: 400,
-                        height: 150,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Column(
-                          children: [
-                            Expanded(
-                                child: Container(
-                              child: StreamBuilder(
-                                  stream: FirebaseFirestore.instance
-                                      .collection('games')
-                                      .doc(widget.gameId)
-                                      .collection('chats')
-                                      .orderBy('createdAt', descending: true)
-                                      .snapshots(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.active) {
-                                      print(widget.gameId);
-                                      if (snapshot.hasData) {
-                                        QuerySnapshot dataSnapShot =
-                                            snapshot.data as QuerySnapshot;
-                                        print(dataSnapShot.docs.length);
-                                        return ListView.builder(
-                                            reverse: true,
-                                            itemCount: dataSnapShot.docs.length,
-                                            itemBuilder: (context, index) {
-                                              Message curmessage =
-                                                  Message.fromJson(dataSnapShot
-                                                          .docs[index]
-                                                          .data()
-                                                      as Map<String, dynamic>);
-                                              print("content: " +
-                                                  curmessage.content);
-                                              print("currentUSer");
-                                              print(AuthController
-                                                  .I.currentUser?.uid);
-                                              print("sender");
-                                              print("print: " +
-                                                  curmessage.senderID);
-                                              return Row(
-                                                mainAxisAlignment: (curmessage
-                                                            .senderID
-                                                            .toString() ==
-                                                        AuthController
-                                                            .I.currentUser?.uid)
-                                                    ? MainAxisAlignment.end
-                                                    : MainAxisAlignment.start,
-                                                children: [
-                                                  Flexible(
-                                                    child: Container(
-                                                      constraints:
-                                                          const BoxConstraints(
-                                                        maxWidth: 230,
-                                                      ),
-                                                      margin: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 10,
-                                                          vertical: 10),
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          vertical: 6,
-                                                          horizontal: 10),
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(15),
-                                                          color: const Color(
-                                                              0xFF00D2FF)),
-                                                      child: Text(
-                                                        style: const TextStyle(
-                                                          fontSize: 15,
-                                                        ),
-                                                        curmessage.content
-                                                            .toString(),
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
-                                              );
-                                            });
-                                      } else if (snapshot.hasError) {
-                                        return const Center(
-                                          child: Text("Snapshot Error"),
-                                        );
-                                      } else {
-                                        return const Center(
-                                          child: Text("Error occured"),
-                                        );
-                                      }
-                                    } else {
-                                      return const Center(
-                                        child: Text(
-                                            "Snapshot Connection state not active"),
-                                      );
-                                    }
-                                  }),
-                            )),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 5),
-                              child: Row(
-                                children: [
-                                  Flexible(
-                                      child: TextField(
-                                    controller: messageController,
-                                    decoration: const InputDecoration(
-                                        hintText: "Enter Chat",
-                                        border: InputBorder.none),
-                                  )),
-                                  IconButton(
-                                      onPressed: sendMessage,
-                                      icon: const Icon(Icons.send))
-                                ],
-                              ),
-                            )
-                          ],
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
-                    )
-                  ],
+                      const SizedBox(height: 20),
+                      GridView.builder(
+                        shrinkWrap: true,
+                        itemCount: 9,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                        ),
+                        itemBuilder: (context, index) {
+                          int row = index ~/ 3;
+                          int col = index % 3;
+                          return GestureDetector(
+                            onTap: isPlayerTurn && game.board[index] == ''
+                                ? () => _makeMove(row, col, game)
+                                : null,
+                            child: Container(
+                              margin: const EdgeInsets.all(4.0),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black),
+                                color: game.board[index] == ''
+                                    ? Colors.white
+                                    : game.board[index] == 'X'
+                                        ? Colors.red
+                                        : Colors.blue,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  game.board[index],
+                                  style: const TextStyle(fontSize: 48),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      if (game.winner != null)
+                        Text(
+                          '${game.winner} wins!',
+                          style: const TextStyle(
+                              fontSize: 45,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green),
+                        ),
+                      ConfettiWidget(
+                        confettiController: _controllerConfetti,
+                        blastDirectionality: BlastDirectionality.explosive,
+                        shouldLoop: false,
+                        colors: const [
+                          Colors.green,
+                          Colors.blue,
+                          Colors.pink,
+                          Colors.orange,
+                          Colors.purple,
+                          Colors.yellow
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Container(
+                          width: 400,
+                          height: 150,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15)),
+                          child: Column(
+                            children: [
+                              Expanded(
+                                  child: Container(
+                                child: StreamBuilder(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('games')
+                                        .doc(widget.gameId)
+                                        .collection('chats')
+                                        .orderBy('createdAt', descending: true)
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.active) {
+                                        print(widget.gameId);
+                                        if (snapshot.hasData) {
+                                          QuerySnapshot dataSnapShot =
+                                              snapshot.data as QuerySnapshot;
+                                          print(dataSnapShot.docs.length);
+                                          return ListView.builder(
+                                              reverse: true,
+                                              itemCount:
+                                                  dataSnapShot.docs.length,
+                                              itemBuilder: (context, index) {
+                                                Message curmessage =
+                                                    Message.fromJson(
+                                                        dataSnapShot.docs[index]
+                                                                .data()
+                                                            as Map<String,
+                                                                dynamic>);
+                                                print("content: " +
+                                                    curmessage.content);
+                                                print("currentUSer");
+                                                print(AuthController
+                                                    .I.currentUser?.uid);
+                                                print("sender");
+                                                print("print: " +
+                                                    curmessage.senderID);
+                                                return Row(
+                                                  mainAxisAlignment: (curmessage
+                                                              .senderID
+                                                              .toString() ==
+                                                          AuthController.I
+                                                              .currentUser?.uid)
+                                                      ? MainAxisAlignment.end
+                                                      : MainAxisAlignment.start,
+                                                  children: [
+                                                    Flexible(
+                                                      child: Container(
+                                                        constraints:
+                                                            const BoxConstraints(
+                                                          maxWidth: 230,
+                                                        ),
+                                                        margin: const EdgeInsets
+                                                            .symmetric(
+                                                            horizontal: 10,
+                                                            vertical: 10),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                vertical: 6,
+                                                                horizontal: 10),
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15),
+                                                            color: const Color(
+                                                                0xFF00D2FF)),
+                                                        child: Text(
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 15,
+                                                          ),
+                                                          curmessage.content
+                                                              .toString(),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                );
+                                              });
+                                        } else if (snapshot.hasError) {
+                                          return const Center(
+                                            child: Text("Snapshot Error"),
+                                          );
+                                        } else {
+                                          return const Center(
+                                            child: Text("Error occured"),
+                                          );
+                                        }
+                                      } else {
+                                        return const Center(
+                                          child: Text(
+                                              "Snapshot Connection state not active"),
+                                        );
+                                      }
+                                    }),
+                              )),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 5),
+                                child: Row(
+                                  children: [
+                                    Flexible(
+                                        child: TextField(
+                                      controller: messageController,
+                                      decoration: const InputDecoration(
+                                          hintText: "Enter Chat",
+                                          border: InputBorder.none),
+                                    )),
+                                    IconButton(
+                                        onPressed: sendMessage,
+                                        icon: const Icon(Icons.send))
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             );
